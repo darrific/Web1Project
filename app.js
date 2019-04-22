@@ -3,6 +3,18 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var mongoose = require('mongoose');
+let dbToken = 'mongodb://darrific:securepassword123@ds153380.mlab.com:53380/web1project';
+var opts = {
+     server: {
+        socketOptions: {keepAlive: 1}
+     }
+};
+
+// mongoose.connect(dbToken, { useNewUrlParser: true }, opts);
+// let db = mongoose.connection;
+
+// db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
