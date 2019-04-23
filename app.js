@@ -3,6 +3,11 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var session = require('express-session');
+var mongoose = require('mongoose');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var User = require('./models/users')
 var mongoose = require('mongoose');
 let dbToken = 'mongodb://darrific:securepassword123@ds153380.mlab.com:53380/web1project';
 var opts = {
@@ -11,8 +16,8 @@ var opts = {
      }
 };
 
-// mongoose.connect(dbToken, { useNewUrlParser: true }, opts);
-// let db = mongoose.connection;
+mongoose.connect(dbToken, { useNewUrlParser: true }, opts);
+let db = mongoose.connection;
 
 // db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
@@ -30,6 +35,49 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Express Session
+app.use(session({
+  secret: 'secret',
+  saveUninitialized: true,
+  resave: true
+}));
+
+// Passport init
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    User.getUserByUsername(username, function(err, user){
+      if(err) throw err;
+      if(!user){
+        console.log("1")
+        return done(null, false, {message: 'Unknown User'});
+      }
+      User.comparePassword(password, user.password, function(err, isMatch){
+        if(err) throw err;
+     	if(isMatch){
+        console.log("2") 
+     	  return done(null, user);
+     	} else {
+        console.log("3")
+     	  return done(null, false, {message: 'Invalid password'});
+     	}
+     });
+   });
+  }
+));
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.getUserById(id, function(err, user) {
+    done(err, user);
+  });
+});
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

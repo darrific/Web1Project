@@ -1,0 +1,44 @@
+extends layout
+
+block content
+    #modal1.modal
+        .modal-content.center-align.black-text
+            h4 Edit User Admin Status
+            .row
+                .col.s12
+                    .switch
+                        label
+                            | Not Admin
+                            input#adminSwitch(type='checkbox')
+                            span.lever
+                            | Admin
+                    br
+                a.modal-close.btn.cRed(href='#!') Close
+    section
+        .container
+            .row
+                .col.xl12
+                    h1 Admin Panel
+    section
+        .container
+            .row
+                .col.xl12
+                    table.centered.highlight
+                        thead
+                            tr
+                                th id
+                                th Username
+                                th Email
+                                th
+                        tbody
+                            for x in users
+                                tr
+                                    td=x._id
+                                    td=x.username
+                                    td=x.email
+                                    td
+                                        a(id=x._id).deleteLink Delete User
+                                    td
+                                        a(data-target=x._id data-state="#{x.isAdmin}").updateLink Update User
+    script(src="/javascripts/adminPanel.js")
+                            

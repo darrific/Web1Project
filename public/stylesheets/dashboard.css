@@ -35,3 +35,20 @@ a {
 .btn-flat {
     color: #BFDBF7!important;
 }
+
+#welcomeBackName {
+    line-height:2px;
+}
+
+input {
+    color: #119822
+}
+
+.collection .collection-item{
+    background-color: #BFDBF7!important;
+    color: black;
+}
+
+.collection .collection-item>a {
+    color: black;
+}

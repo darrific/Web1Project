@@ -1,5 +1,54 @@
 extends layout
 
 block content
-  // code goes here 
-  script(src="/javascripts/homepage.js")
+  #modal1.modal
+    .modal-content.center-align.black-text
+      h4 Sign Up
+      .row
+        form.col.s12(method="POST" action="/register")
+          .row
+            .input-field.col.s12.l6
+              input#registerUsername(name="username" placeholder='Username', type='text' required)
+              label(for='registerUsername') Username
+            .input-field.col.s12.l6
+              input#registerEmail(name="email" placeholder='Email', type='email' required)
+              label(for='registerEmail') Email
+          .row
+            .input-field.col.s12.l6
+              input#registerPassword(name="password" type='password' required)
+              label(for='registerPassword') Password
+            .input-field.col.s12.l6
+              input#registerPassword2(name="password2" type='password' required)
+              label(for='registerPassword2') Password Confirmation
+          input.btn.cGreen(type="submit" value="Register")
+          | &nbsp
+          a.modal-close.btn.cRed(href='#!') Cancel
+  #modal2.modal
+    .modal-content.center-align.black-text
+      h4 Login
+      .row
+        form(method="POST" action="/login").col.s12
+          .row
+            .input-field.col.s12.l6
+              input#loginUsername(name="username" placeholder='Username', type='text')
+              label(for='loginUsername') Username
+            .input-field.col.s12.l6
+              input#loginPassword(name="password" type='password')
+              label(for='loginPassword') Password
+          input.btn.red(type="submit" value="Login")
+          | &nbsp
+          a.modal-close.btn.green(href='#!') Cancel
+  section#mainSection.center-align
+    .container
+      .row
+        .col.xl12
+          img(src="/images/twitter.png" width="200px")
+          h1 Twitter Fam
+          h5
+            b The online tool that helps you grow your Twitter.
+          br
+          br
+          button#login.btn.btn-large.cGreen.modal-trigger(data-target="modal2") Login
+          | &nbsp &nbsp
+          button#signUp.btn.btn-large.cRed.modal-trigger(data-target="modal1") Sign Up
+      script(src="/javascripts/homepage.js")

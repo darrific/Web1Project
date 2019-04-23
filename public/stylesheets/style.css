@@ -1,8 +1,32 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: #011627;
+  color: white;
 }
 
 a {
   color: #00B7FF;
+}
+
+
+.cGreen {
+  background-color: #119822;
+}
+
+.cRed {
+  background-color: #F71735;
+}
+
+.modal {
+  background-color: #384E77!important;
+}
+
+.modal>*, .modal input {
+  color: white!important;
+}
+
+.collection-item .avatar{
+  background-color: #BFDBF7!important;
+  color: black;
 }

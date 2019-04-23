@@ -1,49 +1,140 @@
 let express = require('express');
 let router = express.Router();
 let Twitter = require('twitter'); 
-let XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
-const nasaToken = 'EO5rCgY1q2pVCQGc05BXGblar5EI60RuCLoFR5Dq';
-let APITokens = require('./twitterModule');
+var session = require('express-session');
+var mongoose = require('mongoose');
+var passport = require('passport');
+var User = require('../models/users')
+var mongoose = require('mongoose');
+let dbToken = 'mongodb://darrific:securepassword123@ds153380.mlab.com:53380/web1project';
+var opts = {
+     server: {
+        socketOptions: {keepAlive: 1}
+     }
+};
 
+mongoose.connect(dbToken, { useNewUrlParser: true }, opts);
+let db = mongoose.connection;
+
+let XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+const APITokens = require('./twitterModule');
 let T = new Twitter(APITokens);
 
 var params = {
   screen_name: "darrificTT"
 }
 
+router.get('/setUser', (req,res,next)=>{
+  params.screen_name = req.body.username;
+  console.log(params);
+  return res.end();
+  // return res.render('dashboard', {username: params.screen_name});
+});
 
-/* GET home page. */
-// router.get('/', function(req, res, next) {
+// Register User
+router.post('/register', function(req, res, next){
+  var password = req.body.password;
+  var password2 = req.body.password2;
+  console.log("flag");
+  if (password == password2){
+    var newUser = new User({
+      email: req.body.email,
+      username: req.body.username,
+      password: req.body.password
+    });
 
-//   let xhttp = new XMLHttpRequest();
-//   xhttp.onreadystatechange = function() {
-//     if (this.readyState == 4 && this.status == 200) {
-//       let coverImgUrl = JSON.parse(this.responseText);
-//       res.render('index', { title: 'Simple NASA App', image: coverImgUrl.url, imgDate: coverImgUrl.date, imgExplaination: coverImgUrl.explanation});
-//     }
-//   };
-//   xhttp.open("GET", "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY", true);
-//   xhttp.send();
-// });
+    User.createUser(newUser, function(err, user){
+      if(err) throw err;
+      res.redirect("/");
+    });
+  } else{
+    res.status(500).send("{errors: \"Passwords don't match\"}").end()
+  }
+});
+
+// Login User
+router.post('/login', passport.authenticate('local', {
+  successRedirect: '/dashboard',
+  failureRedirect: '/blockout',
+  failureFlash: false
+}));
+
+// Get Current User
+router.get('/user', function(req, res){
+  res.send(req.user);
+})
+
+
+// Logout User
+router.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/')
+});
 
 
 router.get('/', (req,res,next)=>{
-  return res.render('index'), {title: 'Twitter Fam'};
+  if(req.user === undefined)
+    return res.render('index'), {title: 'Twitter Fam'};
+  return res.redirect('/dashboard')
 })
 
 router.get('/dashboard', (req,res,next)=>{
-  return res.render('dashboard', {username: params.screen_name});
+  if(req.user === undefined)
+    return res.redirect("/");
+  return res.render('dashboard', {username: params.screen_name, isAdmin: req.user.isAdmin});
 });
 
 
-router.get('/main', (req,res,next)=>{
-  T.get('search/tweets', params, function(err, data, response) {
-    let dump = response;
-    return res.render('main', {dump: JSON.stringify(dump)});
+router.get('/adminPanel', (req,res,next)=>{
+  if(req.user === undefined || !req.user.isAdmin)
+    return res.redirect("/");
+    User.find({}, function(err, users) {
+      var userMap = {};
+  
+      users.forEach(function(user) {
+        userMap[user._id] = user;
+      });
+      return res.render('adminPanel', {users: userMap});
+    });
+});
+
+router.delete('/users/:id', (req,res,next)=>{
+  if(req.user === undefined || !req.user.isAdmin)
+    return res.redirect("/");
+  User.deleteOne({ _id: req.params.id })
+  .then(() => {
+      res.json({ success: true });
+  })
+  .catch(err => {
+      res.status.json({ err: err });
   });
 });
 
+router.put('/adminStatusChange/:id', (req,res,next)=>{
+  if(req.user === undefined || !req.user.isAdmin)
+    return res.redirect("/");
+    User.findByIdAndUpdate(req.params.id,req.body,{new: true},(err, updatedUser)=>{
+          if (err)
+            return res.status(500).send(err);
+          return res.send(updatedUser);
+      }
+  )
+});
+
+router.get('/blockout', (req,res,next)=>{
+  return res.render("loggedOut");
+});
+
+
+// router.get('/main', (req,res,next)=>{
+//   T.get('search/tweets', params, function(err, data, response) {
+//     let dump = response;
+//     return res.render('main', {dump: JSON.stringify(dump)});
+//   });
+// });
+
 router.get('/data/followers', (req,res,next)=>{
+  params.screen_name = req.body.username;
   T.get('/followers/ids', params, (err,users, response)=>{
     if(!err){
       return res.send(users.ids);
@@ -52,6 +143,7 @@ router.get('/data/followers', (req,res,next)=>{
 });
 
 router.get('/data/following', (req,res,next)=>{
+  params.screen_name = req.body.username;
   T.get('/friends/ids', params, (err,users, response)=>{
     if(!err){
       return res.send(users.ids);

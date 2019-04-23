@@ -1,4 +1,4 @@
-let indev = false;
+let indev = true;
 let hydrateURI, followersURI, followingURI = '';
 
 if(indev){
@@ -24,6 +24,7 @@ $(document).ready(function(){
       </div>
     </div>
   </div>`;
+    let username = '';
     
     // Modal Handler
     $('.modal').modal();
@@ -87,7 +88,7 @@ $(document).ready(function(){
     let chart1Data = [0,0];
     let chart2Data = [0,0];
 
-    let followers = $.get(followersURI, {}, function(data){
+    let followers = $.get(followersURI, {username:username}, function(data){
         console.log("Follower Data Pulled");
         nFollowers = data.length;
         $("#nFollowers").html(nFollowers);
@@ -96,7 +97,7 @@ $(document).ready(function(){
         $(".modal").html('<div class="modal-content"><h3>Oops.</h3><p>Seems Like We Cannot Connect To Twitter Right Now</p></div>').modal('open');
     });
 
-    let following = $.get(followingURI, {}, function(data){
+    let following = $.get(followingURI, {username:username}, function(data){
         console.log("Following Data Pulled");
         nFollowing = data.length;
         $("#nFollowing").html(nFollowing);
@@ -206,5 +207,24 @@ $(document).ready(function(){
 
         });
     });
-    
+
+    // Connect To Twitter
+    $("#connectTwitter").on("click", function(){
+        $('.modal').html(`
+            <div class="modal-content black-text center-align">
+                <h3>Connect to Twitter.</h3>
+                <p>By connecting to your Twitter Account, you will be able to easily follow and unfollow persons.</p>
+                <a href="/auth/twitterConnect">
+                    <button class="btn blue">Connect</button>
+                </a>
+            </div>
+        `).modal('open');
+    });
+
+    // User In Twitter
+    $("#searchSubmit").on('click', function(){
+        username = $("#search").val();
+    });
+
+
 });

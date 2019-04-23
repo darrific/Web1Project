@@ -18,7 +18,7 @@ html
     #modal1.modal
         .modal-content.center-align.black-text
             h4 Are you sure you wish to logout?
-            a.modal-close.btn.red(href='/auth/logout') Logout
+            a.modal-close.btn.red(href='/logout') Logout
             | &nbsp
             a.modal-close.btn.green(href='#!') Cancel
     nav
@@ -30,18 +30,32 @@ html
                         a(href='/dashboard') Home
                     li
                         a.modal-trigger(data-target='modal1') Logout
-                    
     section
         .container
             .row
-                .col.s12.xl12
+                .col.s12.xl12.offset-l1.offset-xl2
                     h6
                         b Welcome Back,
-                    h2 @#{username}
+                    h2#welcomeBackName #{username}
+                    br
+                    h6 Connect to your Twitter profile to follow and unfollow users. 
+                        span
+                            button.btn.blue#connectTwitter Connect
+                    if isAdmin
+                        a(href="/adminPanel" target="__blank")
+                            .btn.red Admin Panel
+                    .row
+                        .col.xl12.l12.m12.s12
+                            #searchBar.input-field.inline
+                                input#search(type='text' value=username)
+                                span
+                                    a#searchSubmit.btn-floating.btn-large.waves-effect.waves-light.red
+                                        i.material-icons add
+
     section
         .container
             .row
-                .col.s12.m6.l5.xl4
+                .col.s12.m6.l5.xl4.offset-l1.offset-xl2
                     .summaryComponent
                         .card
                             .card-content
@@ -69,12 +83,12 @@ html
     section
         .container
             .row
-                .col.xl12
+                .col.s12.m12.xl8.offset-l2.offset-xl2
                     h3
                         b#detailsTitle
                     #preloader
             .row
-                .col.xl8
+                .col.s12.m12.xl8.offset-l2.offset-xl2
                     ul.collection
 
 script(src='/javascripts/dashboard.js')

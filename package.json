@@ -7,17 +7,22 @@
   },
   "dependencies": {
     "cookie-parser": "~1.4.3",
+    "bcryptjs": "*",
     "debug": "~2.6.9",
+    "cancan": "^3.1.0",
     "express": "~4.16.0",
     "express-session": "^1.16.1",
     "jade": "~1.11.0",
     "mongoose": "^5.5.2",
     "morgan": "~1.9.0",
-    "passport": "^0.4.0",
-    "passport-twitter": "^1.0.4",
+    "passport": "~0.3.2",
+    "passport-twitter": "~1.0.4",
     "session-memory-store": "^1.0.0",
     "twitter": "^1.7.1",
-    "xmlhttprequest": "^1.8.0"
+    "xmlhttprequest": "^1.8.0",
+    "passport-facebook": "~2.1.1",
+    "passport-google-oauth": "~1.0.0",
+    "passport-local": "~1.0.0"
   },
   "devDependencies": {
     "http-errors": "^1.6.3"
