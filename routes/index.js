@@ -13,18 +13,23 @@ var params = {
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+// router.get('/', function(req, res, next) {
 
-  let xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      let coverImgUrl = JSON.parse(this.responseText);
-      res.render('index', { title: 'Simple NASA App', image: coverImgUrl.url, imgDate: coverImgUrl.date, imgExplaination: coverImgUrl.explanation});
-    }
-  };
-  xhttp.open("GET", "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY", true);
-  xhttp.send();
-});
+//   let xhttp = new XMLHttpRequest();
+//   xhttp.onreadystatechange = function() {
+//     if (this.readyState == 4 && this.status == 200) {
+//       let coverImgUrl = JSON.parse(this.responseText);
+//       res.render('index', { title: 'Simple NASA App', image: coverImgUrl.url, imgDate: coverImgUrl.date, imgExplaination: coverImgUrl.explanation});
+//     }
+//   };
+//   xhttp.open("GET", "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY", true);
+//   xhttp.send();
+// });
+
+
+router.get('/', (req,res,next)=>{
+  return res.render('index'), {title: 'Twitter Fam'};
+})
 
 router.get('/dashboard', (req,res,next)=>{
   return res.render('dashboard', {username: params.screen_name});
@@ -56,7 +61,7 @@ router.get('/data/following', (req,res,next)=>{
 });
 
 router.post('/data/hydrateUsers', (req,res,next)=>{
-  let userString = req.body.users;  
+  let userString = req.body.users
   T.get('users/lookup', {user_id:userString}, (err,userArr, response)=>{
     if(err){
       throw err;
