@@ -52,3 +52,15 @@ input {
 .collection .collection-item>a {
     color: black;
 }
+
+.fixedWidth {
+    min-height: 800px;
+}
+
+.modal {
+    background-color: #384E77!important;
+  }
+  
+  .modal>*, .modal input {
+    color: white!important;
+  }

@@ -83,13 +83,13 @@ router.get('/', (req,res,next)=>{
 router.get('/dashboard', (req,res,next)=>{
   if(req.user === undefined)
     return res.redirect("/");
-  return res.render('dashboard', {username: params.screen_name, isAdmin: req.user.isAdmin});
+  return res.render('dashboard', {username: req.user.username, isAdmin: req.user.isAdmin});
 });
 
 
 router.get('/adminPanel', (req,res,next)=>{
   if(req.user === undefined || !req.user.isAdmin)
-    return res.redirect("/");
+    return res.send("You are not admin");
     User.find({}, function(err, users) {
       var userMap = {};
   
@@ -113,8 +113,11 @@ router.delete('/users/:id', (req,res,next)=>{
 });
 
 router.put('/adminStatusChange/:id', (req,res,next)=>{
+  console.log("Test 1 Passed");
   if(req.user === undefined || !req.user.isAdmin)
     return res.redirect("/");
+    console.log(req.params.id)
+    console.log(req.body)
     User.findByIdAndUpdate(req.params.id,req.body,{new: true},(err, updatedUser)=>{
           if (err)
             return res.status(500).send(err);
@@ -135,7 +138,7 @@ router.get('/blockoutTwitter', (req,res,next)=>{
 // TWITTER BASED DATA API
 
 router.get('/data/followers', (req,res,next)=>{
-  params.screen_name = req.body.username;
+  params.screen_name = req.user.username;
   T.get('/followers/ids', params, (err,users, response)=>{
     if(!err){
       return res.send(users.ids);
@@ -144,7 +147,7 @@ router.get('/data/followers', (req,res,next)=>{
 });
 
 router.get('/data/following', (req,res,next)=>{
-  params.screen_name = req.body.username;
+  params.screen_name = req.user.username;
   T.get('/friends/ids', params, (err,users, response)=>{
     if(!err){
       return res.send(users.ids);

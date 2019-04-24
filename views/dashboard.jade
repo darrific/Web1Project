@@ -30,27 +30,27 @@ html
                         a(href='/dashboard') Home
                     li
                         a.modal-trigger(data-target='modal1') Logout
+                    if isAdmin
+                        li
+                            a(href="/adminPanel" target="__blank") Admin
     section
         .container
             .row
                 .col.s12.xl12.offset-l1.offset-xl2
                     h6
                         b Welcome Back,
-                    h2#welcomeBackName #{username}
+                    h2#welcomeBackName @#{username}
                     br
                     h6 Connect to your Twitter profile to follow and unfollow users. 
                         span
                             button.btn.blue#connectTwitter Connect
-                    if isAdmin
-                        a(href="/adminPanel" target="__blank")
-                            .btn.red Admin Panel
-                    .row
-                        .col.xl12.l12.m12.s12
-                            #searchBar.input-field.inline
-                                input#search(type='text' value=username)
-                                span
-                                    a#searchSubmit.btn-floating.btn-large.waves-effect.waves-light.red
-                                        i.material-icons add
+                    //- .row
+                    //-     .col.xl12.l12.m12.s12
+                    //-         #searchBar.input-field.inline
+                    //-             input#search(type='text' value=username)
+                    //-             span
+                    //-                 a#searchSubmit.btn-floating.btn-large.waves-effect.waves-light.red
+                    //-                     i.material-icons add
 
     section
         .container
@@ -80,12 +80,13 @@ html
                                     canvas#chart2(width='200', height='200')
                             .card-action
                                 a#getAllUnfollowers.btn-flat(href="#!") View Unfollowers
-    section
+    section.fixedWidth
         .container
             .row
                 .col.s12.m12.xl8.offset-l2.offset-xl2
                     h3
                         b#detailsTitle
+                    p#detailsInfo
                     #preloader
             .row
                 .col.s12.m12.xl8.offset-l2.offset-xl2

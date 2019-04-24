@@ -1,4 +1,4 @@
-let indev = true;
+let indev = false;
 let hydrateURI, followersURI, followingURI = '';
 
 if(indev){
@@ -88,8 +88,8 @@ $(document).ready(function(){
     let chart1Data = [0,0];
     let chart2Data = [0,0];
 
-    let followers = $.get(followersURI, {username:username}, function(data){
-        console.log("Follower Data Pulled");
+    let followers = $.get(followersURI, function(data){
+        console.log(data);
         nFollowers = data.length;
         $("#nFollowers").html(nFollowers);
     }).fail(function(){
@@ -97,8 +97,8 @@ $(document).ready(function(){
         $(".modal").html('<div class="modal-content"><h3>Oops.</h3><p>Seems Like We Cannot Connect To Twitter Right Now</p></div>').modal('open');
     });
 
-    let following = $.get(followingURI, {username:username}, function(data){
-        console.log("Following Data Pulled");
+    let following = $.get(followingURI, function(data){
+        console.log(data);
         nFollowing = data.length;
         $("#nFollowing").html(nFollowing);
     }).fail(function(){
@@ -126,7 +126,8 @@ $(document).ready(function(){
                     unfollowers.push(x);
                 }
             }
-
+            console.log(unfollowers);
+            console.log(unfollowing);
             data1.datasets[0].data = chart1Data;
             data2.datasets[0].data = chart2Data;  
             
@@ -144,8 +145,11 @@ $(document).ready(function(){
             // DOM EVENT LISTENERS
             $("#getAllUnfollowers").on('click', function(){
                 $("#detailsTitle").html("These people are fake to you.")
+                $("#detailsInfo").html("You can only see the first 100 fake fam. To see all the fake fam, <button id='upgradeBtn' class='btn btn-tiny green'>Upgrade</button>")
+                upgrade();
                 $("#preloader").html(preloader);
                 $(".collection").html('');
+                unfollowers = unfollowers.slice(0,99);
                 $.post(hydrateURI, {users: unfollowers.join()}, function(data){
                     
                     $("#preloader").html("");
@@ -159,12 +163,12 @@ $(document).ready(function(){
                                     <a href="https://twitter.com/${x.screen_name}" target="_blank"><b>${x.name}</b> @${x.screen_name}</a>
                                 </span>
                                 <p>${x.description}</p>
-                                <a href="#!" class="secondary-content">
-                                    <button class="btn-small unfollowBtn blue" id="${x.id}">Unfollow</button>
-                                </a>
                             </li>`
                         $(".collection").append(template);
                     }
+                    // <a href="#!" class="secondary-content">
+                    //     <button class="btn-small unfollowBtn blue" id="${x.id}">Unfollow</button>
+                    // </a>
                     $(".unfollowBtn").on('click', function(){
                         let id = this.id;
                         $.post('/t/unfollow', {userId: id}, function(data){
@@ -176,8 +180,11 @@ $(document).ready(function(){
 
             $("#getAllUnfollowing").on('click', function(){
                 $("#detailsTitle").html("You are fake to these people.")
+                $("#detailsInfo").html("You can only see the first 100 people you are fake fam to. To see all the people you are fake fam to, <button id='upgradeBtn' class='btn btn-tiny green'>Upgrade</button>")
+                upgrade();
                 $("#preloader").html(preloader);
                 $(".collection").html('');
+                unfollowing = unfollowing.slice(0,99);
                 $.post(hydrateURI, {users: unfollowing.join()}, function(data){
                     $(".collection").html('');
                     $("#preloader").html("");
@@ -190,10 +197,10 @@ $(document).ready(function(){
                                     <a href="https://twitter.com/${x.screen_name}" target="_blank"><b>${x.name}</b> @${x.screen_name}</a>
                                 </span>
                                 <p>${x.description}</p>
-                                <a href="#!" class="secondary-content">
-                                    <button class="btn-small followBtn blue" id="${x.id}">Follow</button>
-                                </a>
-                            </li>`
+                            </li>`;
+                            // <a href="#!" class="secondary-content">
+                            //     <button class="btn-small followBtn blue" id="${x.id}">Follow</button>
+                            // </a>
                         $(".collection").append(template);
                     }
                     $(".followBtn").on('click', function(){
@@ -220,11 +227,18 @@ $(document).ready(function(){
             </div>
         `).modal('open');
     });
-
-    // User In Twitter
-    $("#searchSubmit").on('click', function(){
-        username = $("#search").val();
-    });
-
-
 });
+
+function upgrade(){
+    $("#upgradeBtn").off('click');
+    $("#upgradeBtn").on('click', function(){
+        $('.modal').html(`
+            <div class="modal-content black-text center-align">
+                <h3>Upgrade Your Account</h3>
+                <p>This feature is coming soon! </p>
+                <button class="btn modal-close btn-flat">Close</button>
+                </a>
+            </div>
+        `).modal('open');
+    });
+}

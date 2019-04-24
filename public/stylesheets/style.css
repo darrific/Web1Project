@@ -26,7 +26,12 @@ a {
   color: white!important;
 }
 
-.collection-item .avatar{
-  background-color: #BFDBF7!important;
-  color: black;
+
+nav {
+  margin-bottom: 50px;
+  background-color: #384E77;
+}
+
+body {
+  padding: 0;
 }

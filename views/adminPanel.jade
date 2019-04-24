@@ -1,19 +1,22 @@
 extends layout
 
 block content
+    script(src="/javascripts/adminPanel.js")
     #modal1.modal
         .modal-content.center-align.black-text
-            h4 Edit User Admin Status
-            .row
-                .col.s12
-                    .switch
-                        label
-                            | Not Admin
-                            input#adminSwitch(type='checkbox')
-                            span.lever
-                            | Admin
-                    br
-                a.modal-close.btn.cRed(href='#!') Close
+            h4 Are you sure you wish to logout?
+            a.modal-close.btn.red(href='/logout') Logout
+            | &nbsp
+            a.modal-close.btn.green(href='#!') Cancel
+    nav
+        .container
+            .nav-wrapper
+                a.brand-logo(href='/dashboard') Twitter Fam
+                ul#nav-mobile.right.hide-on-med-and-down
+                    li
+                        a(href='/dashboard') Home
+                    li
+                        a.modal-trigger(data-target='modal1') Logout
     section
         .container
             .row
@@ -29,7 +32,7 @@ block content
                                 th id
                                 th Username
                                 th Email
-                                th
+                                th Admin
                         tbody
                             for x in users
                                 tr
@@ -37,8 +40,10 @@ block content
                                     td=x.username
                                     td=x.email
                                     td
-                                        a(id=x._id).deleteLink Delete User
+                                        .switch
+                                            label
+                                                input.adminSwitch(type='checkbox' data-target=x._id data-admin="#{x.isAdmin}")
+                                                span.lever
                                     td
-                                        a(data-target=x._id data-state="#{x.isAdmin}").updateLink Update User
-    script(src="/javascripts/adminPanel.js")
+                                        a(id=x._id).deleteLink Delete User
                             
