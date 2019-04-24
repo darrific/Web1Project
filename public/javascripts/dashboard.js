@@ -1,4 +1,4 @@
-let indev = true;
+let indev = false;
 let hydrateURI, followersURI, followingURI = '';
 
 if(indev){
