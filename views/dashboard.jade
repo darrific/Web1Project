@@ -15,6 +15,12 @@ html
 
 
   body#vapp.white-text
+    #modal2.modal
+        .modal-content.center-align.black-text
+            h4 Are you sure you wish to logout?
+            a.modal-close.btn.red(href='/logout') Logout
+            | &nbsp
+            a.modal-close.btn.green(href='#!') Cancel
     #modal1.modal
         .modal-content.center-align.black-text
             h4 Are you sure you wish to logout?
@@ -29,7 +35,7 @@ html
                     li
                         a(href='/dashboard') Home
                     li
-                        a.modal-trigger(data-target='modal1') Logout
+                        a.modal-trigger(data-target='modal2') Logout
                     if isAdmin
                         li
                             a(href="/adminPanel" target="__blank") Admin

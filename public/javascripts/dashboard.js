@@ -1,4 +1,4 @@
-let indev = false;
+let indev = true;
 let hydrateURI, followersURI, followingURI = '';
 
 if(indev){
@@ -94,7 +94,7 @@ $(document).ready(function(){
         $("#nFollowers").html(nFollowers);
     }).fail(function(){
         console.log("Follower Data Not Pulled");
-        $(".modal").html('<div class="modal-content"><h3>Oops.</h3><p>Seems Like We Cannot Connect To Twitter Right Now</p></div>').modal('open');
+        $("#modal1").html('<div class="modal-content"><h3>Oops.</h3><p>Seems Like We Cannot Connect To Twitter Right Now</p></div>').modal('open');
     });
 
     let following = $.get(followingURI, function(data){
@@ -103,7 +103,7 @@ $(document).ready(function(){
         $("#nFollowing").html(nFollowing);
     }).fail(function(){
         console.log("Following Data Not Pulled");
-        $(".modal").html('<div class="modal-content"><h3>Oops.</h3><p>Seems Like We Cannot Connect To Twitter Right Now</p></div>').modal('open');
+        $("#modal1").html('<div class="modal-content"><h3>Oops.</h3><p>Seems Like We Cannot Connect To Twitter Right Now</p></div>').modal('open');
     });
 
     // ASYNC WAIT
@@ -217,7 +217,7 @@ $(document).ready(function(){
 
     // Connect To Twitter
     $("#connectTwitter").on("click", function(){
-        $('.modal').html(`
+        $('#modal1').html(`
             <div class="modal-content black-text center-align">
                 <h3>Connect to Twitter.</h3>
                 <p>By connecting to your Twitter Account, you will be able to easily follow and unfollow persons.</p>
@@ -232,7 +232,7 @@ $(document).ready(function(){
 function upgrade(){
     $("#upgradeBtn").off('click');
     $("#upgradeBtn").on('click', function(){
-        $('.modal').html(`
+        $('#modal1').html(`
             <div class="modal-content black-text center-align">
                 <h3>Upgrade Your Account</h3>
                 <p>This feature is coming soon! </p>
