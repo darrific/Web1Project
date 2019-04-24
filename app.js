@@ -77,8 +77,11 @@ passport.use(new TwitterStrategy({
   callbackURL: "http://web1.varion.co/twitterconnectcb"
 },
 function(token, tokenSecret, profile, done) {
-  User.findOrCreate({ twitterId: profile.id }, function(err, user) {
+  User.getUserByUsername(profile.displayName, function(err, user) {
     if (err) { return done(err); }
+    if(user && user.twitterToken=="-1"){
+      user.twitterToken = token;
+    }
     done(null, user);
   });
 }
