@@ -214,7 +214,7 @@ $(document).ready(function(){
             <div class="modal-content black-text center-align">
                 <h3>Connect to Twitter.</h3>
                 <p>By connecting to your Twitter Account, you will be able to easily follow and unfollow persons.</p>
-                <a href="/auth/twitterConnect">
+                <a href="/twitterconnect">
                     <button class="btn blue">Connect</button>
                 </a>
             </div>

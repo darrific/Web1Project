@@ -7,6 +7,8 @@ var session = require('express-session');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var TwitterStrategy = require('passport-twitter').Strategy;
+const APITokens = require('./routes/twitterModule');
 var User = require('./models/users')
 var mongoose = require('mongoose');
 let dbToken = 'mongodb://darrific:securepassword123@ds153380.mlab.com:53380/web1project';
@@ -67,6 +69,19 @@ passport.use(new LocalStrategy(
      });
    });
   }
+));
+
+passport.use(new TwitterStrategy({
+  consumerKey: APITokens.consumer_key,
+  consumerSecret: APITokens.consumer_secret,
+  callbackURL: "http://web1.varion.co/twitterconnectcb"
+},
+function(token, tokenSecret, profile, done) {
+  User.findOrCreate({ twitterId: profile.id }, function(err, user) {
+    if (err) { return done(err); }
+    done(null, user);
+  });
+}
 ));
 
 passport.serializeUser(function(user, done) {
